@@ -7,7 +7,7 @@ BASE_URL = "https://solid-giggle-v6jjx99wgwr5fw546-3000.app.github.dev"
 st.set_page_config(page_title="E-commerce Dashboard", layout="wide")
 st.title("🛒 E-commerce Dashboard")
 
-table = st.sidebar.selectbox("Select Table", ["Users", "Products", "Categories", "Orders", "Payments", "Reviews"])
+table = st.sidebar.selectbox("Select Table", ["Dashboard", "Users", "Products", "Categories", "Orders", "Payments", "Reviews"])
 
 def fetch(endpoint):
     try:
@@ -16,7 +16,39 @@ def fetch(endpoint):
     except:
         return pd.DataFrame()
 
-if table == "Users":
+if table == "Dashboard":
+
+    users_df = fetch("users")
+    products_df = fetch("products")
+    orders_df = fetch("orders")
+    payments_df = fetch("payments")
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric("Total Users", len(users_df))
+
+    with col2:
+        st.metric("Total Products", len(products_df))
+
+    with col3:
+        st.metric("Total Orders", len(orders_df))
+
+    with col4:
+        total_sales = payments_df["amount"].sum() if not payments_df.empty else 0
+        st.metric("Total Sales", f"Rs {total_sales}")
+
+    st.subheader("Orders by Status")
+    if not orders_df.empty:
+        status_count = orders_df["status"].value_counts()
+        st.bar_chart(status_count)
+
+    st.subheader("Top Products by Stock")
+    if not products_df.empty:
+        top_products = products_df.sort_values(by="stock", ascending=False).head(10)
+        st.bar_chart(top_products.set_index("name")["stock"])
+
+elif table == "Users":
     action = st.sidebar.selectbox("Select Action", ["View", "Create", "Update", "Delete"])
 
     if action == "View":
