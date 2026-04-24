@@ -8,7 +8,6 @@ st.set_page_config(page_title="E-commerce Dashboard", layout="wide")
 st.title("🛒 E-commerce Dashboard")
 
 table = st.sidebar.selectbox("Select Table", ["Users", "Products", "Categories", "Orders", "Payments", "Reviews"])
-# action = st.sidebar.selectbox("Select Action", ["View", "Create", "Update", "Delete"])
 
 def fetch(endpoint):
     try:
@@ -17,7 +16,6 @@ def fetch(endpoint):
     except:
         return pd.DataFrame()
 
-# ================= USERS =================
 if table == "Users":
     action = st.sidebar.selectbox("Select Action", ["View", "Create", "Update", "Delete"])
 
@@ -51,7 +49,6 @@ if table == "Users":
             requests.delete(f"{BASE_URL}/users/{user_id}")
             st.warning("User deleted")
 
-# ================= PRODUCTS =================
 elif table == "Products":
     action = st.sidebar.selectbox("Select Action", ["View", "Create", "Update", "Delete"])
 
@@ -101,7 +98,6 @@ elif table == "Products":
             requests.delete(f"{BASE_URL}/products/{product_id}")
             st.warning("Product deleted")
 
-# ================= CATEGORIES =================
 elif table == "Categories":
     action = st.sidebar.selectbox("Select Action", ["View", "Create", "Update", "Delete"])
 
@@ -128,7 +124,6 @@ elif table == "Categories":
             requests.delete(f"{BASE_URL}/categories/{category_id}")
             st.warning("Category deleted")
 
-# ================= ORDERS =================
 elif table == "Orders":
     action = st.sidebar.selectbox("Select Action", ["View", "Create", "Update", "Delete"])
 
@@ -159,14 +154,14 @@ elif table == "Orders":
             requests.delete(f"{BASE_URL}/orders/{order_id}")
             st.warning("Order deleted")
 
-# ================= PAYMENTS =================
+
 elif table == "Payments":
     df = fetch("payments")
     st.dataframe(df)
     if not df.empty:
         st.metric("Total Sales", f"Rs {df['amount'].sum()}")
 
-# ================= REVIEWS =================
+
 elif table == "Reviews":
     df = fetch("reviews")
     st.dataframe(df)
